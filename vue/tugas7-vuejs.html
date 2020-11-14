@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <div v-for="(comment, index) in comments">
+            <p>
+                {{index+1}}. {{comment.content}} || {{comment.timestamp}} || Score: {{comment.score}} ||
+                <button v-on:click="plus(index)">+</button> <button v-on:click="minus(index)">-</button>
+            </p>
+
+        </div>
+
+        <textarea v-on:keyup.13="addComment" name="content" id="commentContent"></textarea>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+	
+    <script>
+        var vue = new Vue({
+            el: '#app',
+            data: {
+                comments: [
+                    { content: "komentar 1 komentar 1 komentar 1", timestamp: "29/07/2020", score: 0, plus_status: 0, min_status: 0 },
+                    { content: "komentar 2 komentar 2 komentar 2", timestamp: "28/07/2020", score: 5, plus_status: 0, min_status: 0 },
+                    { content: "komentar 3 komentar 3 komentar 3", timestamp: "27/07/2020", score: 5, plus_status: 0, min_status: 0 },
+                ]
+            },
+            methods: {
+                plus: function (index) {
+                    if (vue.comments[index].plus_status == 0 && vue.comments[index].min_status == 0) {
+                        vue.comments[index].score++;
+                        vue.comments[index].plus_status = 1;
+                        console.log(vue.comments[index].score);
+                    } else if (vue.comments[index].min_status == 1 && vue.comments[index].plus_status == 0) {
+                        vue.comments[index].score += 2;
+                        vue.comments[index].min_status = 0;
+                        vue.comments[index].plus_status = 1;
+                        console.log(vue.comments[index].score);
+                    } else if (vue.comments[index].plus_status == 1 && vue.comments[index].min_status == 0) {
+                        vue.comments[index].score--;
+                        vue.comments[index].plus_status = 0;
+                        console.log(vue.comments[index].score);
+                    }
+                },
+                minus: function (index) {
+                    if (vue.comments[index].min_status == 0 && vue.comments[index].plus_status == 0) {
+                        vue.comments[index].score--;
+                        vue.comments[index].min_status = 1;
+                        console.log(vue.comments.score);
+                    } else if (vue.comments[index].plus_status == 1 && vue.comments[index].min_status == 0) {
+                        vue.comments[index].score -= 2;
+                        vue.comments[index].plus_status = 0;
+                        vue.comments[index].min_status = 1;
+                        console.log(vue.comments[index].score);
+                    } else if (vue.comments[index].min_status == 1 && vue.comments[index].plus_status == 0) {
+                        vue.comments[index].score++;
+                        vue.comments[index].min_status = 0;
+                        console.log(vue.comments[index].score);
+                    }
+                },
+                addComment: function () {
+                    value = document.getElementById('commentContent').value;
+                    let today = new Date().toLocaleDateString();
+                    vue.comments.push({ content: value, timestamp: today, score: 0, plus_status: 0, min_status: 0 })
+                    console.log(vue.comments);
+                    document.getElementById('commentContent').value = '';
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
